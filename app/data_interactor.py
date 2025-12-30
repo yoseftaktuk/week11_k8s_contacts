@@ -5,11 +5,7 @@ from dotenv import load_dotenv
 import os
 from bson.objectid import ObjectId
 
-class Item(BaseModel):
-    id : int | None = Field(default=None)
-    first_name: str | None = Field(default=None, max_length=50)
-    last_name: str | None = Field(default=None, max_length=50)
-    phone_number: str | None = Field(default=None, max_length=50)
+
 
 class Valid:   
     @staticmethod    
@@ -21,18 +17,25 @@ class Valid:
 
 load_dotenv()
 class Contact:
-    def __init__(self, contact_info: object):
-        self.id = contact_info.id
-        self.first_name = contact_info.first_name
-        self.last_name = contact_info.last_name
-        self.phone_number = contact_info.phone_number
+    # def __init__(self, contact_info: object):
+    #     print(contact_info['first_name'])
+    #     self.id = contact_info['_id']
+    #     self.first_name = contact_info['first_name']
+    #     self.last_name = contact_info['last_name']
+    #     self.phone_number = contact_info['phone_number']
 
-    def convert_to_dict(self):
-        return {"id": self.id, 
-                "first_name": self.first_name, 
-                "last_name": self.last_name, 
-                "phone_number": self.phone_number}
-    
+    def convert_to_dict(self,contact):
+        return {
+
+                "id": str(contact["_id"]),  # Convert ObjectId to string
+
+                "first_name": contact["first_name"],
+
+                "last_name": contact["last_name"],
+
+                "phone_number": contact["phone_number"]
+
+            }
 class Dataservice:
     def __init__(self):
         try:  
@@ -49,9 +52,9 @@ class Dataservice:
     def get_all_contacts(self):
         contacts_list = []
         cursor = self.collection.find()
-        print(cursor)
         for doc in cursor:
-            contacts_list.append(doc)
+            contect = Contact().convert_to_dict(doc)
+            contacts_list.append(contect)
         return contacts_list
 
     def create_contact(self, contact_data: dict):
@@ -80,16 +83,3 @@ class Dataservice:
         
     
             
-
-a = Dataservice()
-# print(a.create_contact({
-
-# "first_name": "John",
-
-# "last_name": "Doe",
-
-# "phone_number": "050-1234567"
-# })) 
-a.update_contact('69541e751a8b65f667eb487d',{"fist_name": "Johnnnn"})
-# print(a.get_all_contacts())
-# print(a.delete_contact('69541d0ccbbc776cd7377e20'))
