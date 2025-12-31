@@ -8,8 +8,7 @@ class Item(BaseModel):
     first_name: str | None = Field(default=None, max_length=50)
     last_name: str | None = Field(default=None, max_length=50)
     phone_number: str | None = Field(default=None, max_length=50)
-    def  __dict__():
-        pass
+    
 
 app = FastAPI()
 
@@ -25,22 +24,25 @@ def get_all_contacts():
 
 @app.post('/contacts')
 def post_contacts(item: Item):
-    try:
-        data = data_interactor.Contact(item)
-        dict_data = data.convert_to_dict() #Converts the object to a dict
+    # try:
+        data = data_interactor.Contact()
+        dict_data = data.convert_item_to_dict(item)
+        print(dict_data) #Converts the object to a dict
         result = qury.create_contact(dict_data) #return id
         return {'message': 'Contact creation successful', "id": result}
-    except Exception as e:
-            raise HTTPException(detail=str(e))  
+    # except Exception as e:
+    #         raise HTTPException(status_code=500, detail=str(e))  
 
 
 @app.put('/contacts/{id}')
 def contact_update(item: Item, id: str):
     try:
-        data = data_interactor.Contact(item)
-        dict_data = data.convert_to_dict() #Converts the object to a dict 
-        qury.update_contact(id, dict_data)
-        return {'message': 'Contact update successful.'}
+        data = data_interactor.Contact()
+        dict_data = data.convert_item_to_dict(item) #Converts the object to a dict 
+        print(qury.update_contact(id, dict_data))
+        if qury.update_contact(id, dict_data):
+            return {'message': 'Contact update successful.'}
+        return {'message':'Contact person update failed.'}
     except Exception as e:
             raise HTTPException(status_code=404, detail=str(e))
 

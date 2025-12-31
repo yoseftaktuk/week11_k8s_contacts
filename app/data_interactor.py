@@ -17,34 +17,36 @@ class Valid:
 
 load_dotenv()
 class Contact:
-    # def __init__(self, contact_info: object):
-    #     print(contact_info['first_name'])
-    #     self.id = contact_info['_id']
-    #     self.first_name = contact_info['first_name']
-    #     self.last_name = contact_info['last_name']
-    #     self.phone_number = contact_info['phone_number']
+    def __init__(self, contact_info: object=None):
+        if contact_info:    
+            data = self.convert_to_dict(contact_info)
+            self.id = data['id']
+            self.first_name = data['first_name']
+            self.last_name = data['last_name']
+            self.phone_number = data['phone_number']
 
     def convert_to_dict(self,contact):
         return {
 
-                "id": str(contact["_id"]),  # Convert ObjectId to string
-
+                "id": str(contact["_id"]),
                 "first_name": contact["first_name"],
-
                 "last_name": contact["last_name"],
-
                 "phone_number": contact["phone_number"]
 
             }
+    def convert_item_to_dict(self, contect):
+        return {'first_name': contect.first_name,
+                'last_name': contect.last_name,
+                'phone_number': contect.phone_number
+                }
+load_dotenv()   
 class Dataservice:
     def __init__(self):
         try:  
-            self.client = MongoClient('mongodb://localhost:27017/')  
-            # self.client = MongoClient(
-            #     MONGO_HOST = os.getenv("MONGO_HOST", "localhost"),
-            #     MONGO_PORT = os.getenv("MONGO_PORT", "27017"),
-            #     MONGO_DB = os.getenv("MONGO_DB", "contactsdb")
-            # )
+            self.client = MongoClient(
+                host = os.getenv("MONGO_HOST"),
+                port = int(os.getenv("MONGO_PORT"))
+            )
             self.db = self.client['contactsdb']
             self.collection = self.db['contacts']
         except  Exception as e:
@@ -53,7 +55,7 @@ class Dataservice:
         contacts_list = []
         cursor = self.collection.find()
         for doc in cursor:
-            contect = Contact().convert_to_dict(doc)
+            contect = Contact(doc)
             contacts_list.append(contect)
         return contacts_list
 
@@ -65,12 +67,16 @@ class Dataservice:
         return False
 
     def update_contact(self, id: str, contact_data: dict):
-        try:    
-            for key, value in contact_data.items():
-                self.collection.update_one({"_id": ObjectId(id)}, {"$set": {key: value}})
-            return True
-        except:
+        for key, value in contact_data.items():
+            result = self.collection.update_one({"_id": ObjectId(id)}, {"$set": {key: value}})
+            print(result.matched_count)
+            if result.matched_count == 1:
+                continue
             return False
+        return True
+
+
+            
          
 
     def delete_contact(self, id: str):
