@@ -39,7 +39,7 @@ class Contact:
                 'last_name': contect.last_name,
                 'phone_number': contect.phone_number
                 }
-load_dotenv()   
+  
 class Dataservice:
     def __init__(self):
         try:  
