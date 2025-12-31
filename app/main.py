@@ -24,14 +24,14 @@ def get_all_contacts():
 
 @app.post('/contacts')
 def post_contacts(item: Item):
-    # try:
+    try:
         data = data_interactor.Contact()
-        dict_data = data.convert_item_to_dict(item)
+        dict_data = data.convert_item_to_dict(item)#Turns the body into a dict
         print(dict_data) #Converts the object to a dict
         result = qury.create_contact(dict_data) #return id
         return {'message': 'Contact creation successful', "id": result}
-    # except Exception as e:
-    #         raise HTTPException(status_code=500, detail=str(e))  
+    except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))  
 
 
 @app.put('/contacts/{id}')
@@ -42,7 +42,7 @@ def contact_update(item: Item, id: str):
         print(qury.update_contact(id, dict_data))
         if qury.update_contact(id, dict_data):
             return {'message': 'Contact update successful.'}
-        return {'message':'Contact person update failed.'}
+        return {'message': 'Contact person update failed.'}
     except Exception as e:
             raise HTTPException(status_code=404, detail=str(e))
 

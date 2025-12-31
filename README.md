@@ -77,9 +77,34 @@ http://127.0.0.1:50287/contacts/<id>
 ### Prerequisites
 
 * `kubectl` installed
-* `minikube` installed and running
+* `minikube` installed
+* Docker installed (for Docker Hub access)
 
-### Steps
+---
+
+### Minikube – Start & Stop
+
+**Start Minikube:**
+
+```bash
+minikube start
+```
+
+**Stop Minikube:**
+
+```bash
+minikube stop
+```
+
+**Delete Minikube cluster (optional):**
+
+```bash
+minikube delete
+```
+
+---
+
+### Deploy the Application
 
 1. Open a command prompt / terminal.
 2. Navigate to the project’s `software` folder.
@@ -98,7 +123,29 @@ This command will open the application in your default browser.
 
 ---
 
+## Docker Hub Login
+
+To pull or push images from Docker Hub, you must be logged in.
+
+**Login to Docker Hub:**
+
+```bash
+docker login
+```
+
+You will be prompted to enter your Docker Hub **username** and **password** (or access token).
+
+**Verify login:**
+
+```bash
+docker info
+```
+
+---
+
 ## Notes
 
-* Make sure MongoDB is accessible from the cluster.
+* Make sure MongoDB is accessible from the Kubernetes cluster.
 * Ports and service URLs may vary depending on your local setup.
+* Ensure Docker is running before using Minikube or Docker Hub.
+
