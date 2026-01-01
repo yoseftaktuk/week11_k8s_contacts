@@ -68,7 +68,9 @@ class Dataservice:
         return False
 
     def update_contact(self, id: str, contact_data: dict):
-        for key, value in contact_data.items():#A loop that goes through all keys and sends a query to update the contact person
+        for key, value in contact_data.items(): #A loop that goes through all keys and sends a query to update the contact person
+            if not key or not value: 
+                continue
             result = self.collection.update_one({"_id": ObjectId(id)}, {"$set": {key: value}})
             if result.matched_count == 1:#Checks that an update has been made.
                 continue

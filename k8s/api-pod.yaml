@@ -7,7 +7,7 @@ metadata:
 spec:
     containers:      
     - name: api
-      image: taktuk/my_fastapiapp:latest
+      image: taktuk/my_fastapi_app:latest
       imagePullPolicy: Always
       ports:
       - containerPort: 8000

@@ -49,8 +49,9 @@ def contact_update(item: Item, id: str):
 @app.delete('/contacts/{id}')
 def delete_contact(id: str):
     try:
-        qury.delete_contact(id)
-        return {'massege': 'Contact deletion successful'}
+        if qury.delete_contact(id):
+            return {'massege': 'Contact deletion successful'}
+        return{"massege": "id not fund"}
     except Exception as e:
          raise HTTPException(status_code=404, detail=str(e))    
 
